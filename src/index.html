@@ -6,11 +6,18 @@
   <base href="/" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Google Identity Services -->
+  <script>
+    function gapiLoaded() {
+      // Esta função será chamada quando a biblioteca gapi estiver carregada
+      window.dispatchEvent(new Event('gapi:loaded'));
+    }
+  </script>
+
+  <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+
 </head>
 <body>
 <app-root></app-root>
 </body>
 </html>
-

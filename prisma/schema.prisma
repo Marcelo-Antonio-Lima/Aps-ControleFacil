@@ -19,8 +19,9 @@ model User {
   id    String  @id
   email String  @unique
   name  String?
-  saldoId Int @unique
-  saldo Saldo @relation(fields: [saldoId],references: [id])
+
+  saldoId Int? @unique
+  saldo Saldo? @relation(fields: [saldoId],references: [id])
 }
 
 model Saldo{

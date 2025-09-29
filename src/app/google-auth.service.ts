@@ -2,8 +2,7 @@
 /// <reference types="gapi.auth2" />
 /// <reference types="gapi.client" />
 import { Injectable } from '@angular/core';
-import * as dotenv from 'dotenv';
-dotenv.config();
+import { environment } from '../environments/environment';
 
 declare const google: any;
 declare const gapi: any;
@@ -12,23 +11,38 @@ declare const gapi: any;
 export class GoogleAuthService {
   private accessToken: string | null = null;
   private tokenClient: any;
+  // Promise que resolve quando gapi.client estiver pronto
+  private gapiClientPromise!: Promise<void>;
 
-  private CLIENT_ID = process.env["CLIENTID "];
-  private API_KEY = process.env["APIKEY "];
+  private CLIENT_ID = environment.CLIENT_ID;
+  private API_KEY = environment.API_KEY;
 
   constructor() {
-    this.initializeGapiClient();
-    this.initializeTokenClient();
-  }
+    if (!this.CLIENT_ID || !this.API_KEY) {
+      console.error('CLIENT_ID ou API_KEY não definidos no ambiente do Angular.');
+      return;
+    }
 
-  private initializeGapiClient(): void {
-    gapi.load('client', async () => {
-      await gapi.client.init({
-        apiKey: this.API_KEY,
-        clientID: this.CLIENT_ID,
+    this.gapiClientPromise = new Promise((resolve) => {
+
+      // Espera pelo evento 'gapi:loaded' disparado pelo index.html
+      window.addEventListener('gapi:loaded', () => {
+        this.initializeGapiClient(resolve);
       });
-    });
-  }
+    this.initializeTokenClient();
+  })};
+
+  private initializeGapiClient(resolve: () => void): void {
+      // gapi.load é seguro para ser chamado, mas o client.init deve estar dentro
+      gapi.load('client', async () => {
+        await gapi.client.init({
+          apiKey: this.API_KEY,
+          clientId: this.CLIENT_ID, // Use clientId, não clientID
+        });
+        console.log('gapi.client inicializado.');
+        resolve(); // Resolve a promise APÓS A INICIALIZAÇÃO
+      });
+    }
 
   private initializeTokenClient(): void {
     if (typeof google === 'undefined') {
@@ -37,6 +51,7 @@ export class GoogleAuthService {
     }
     this.tokenClient = google.accounts.oauth2.initTokenClient({
       client_id: this.CLIENT_ID,
+      scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
       callback: (tokenResponse: any) => {
         this.accessToken = tokenResponse.access_token;
         gapi.client.setToken({ access_token: this.accessToken });
