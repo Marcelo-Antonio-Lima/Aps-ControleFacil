@@ -1,5 +1,7 @@
 package ControleFacil_Backend.config;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -35,5 +37,17 @@ public class JwtUtil {
                 .setExpiration(exp)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public Jws<Claims> parseToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token);
+    }
+
+    public boolean isExpired(Claims claims) {
+        Date exp = claims.getExpiration();
+        return exp != null && exp.before(new Date());
     }
 }
