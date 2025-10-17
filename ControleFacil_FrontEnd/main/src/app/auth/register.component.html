@@ -1,0 +1,30 @@
+<section class="auth-wrapper">
+  <h2 class="auth-title">Cadastro</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+    <label class="form-label" for="name">Nome</label>
+    <input id="name" type="text" class="form-input" formControlName="name" placeholder="Seu nome" />
+    <div class="form-error" *ngIf="form.controls.name.touched && form.controls.name.invalid">
+      Nome obrigatório.
+    </div>
+
+    <label class="form-label" for="email">E-mail</label>
+    <input id="email" type="email" class="form-input" formControlName="email" placeholder="seu@email" />
+    <div class="form-error" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+      Informe um e-mail válido.
+    </div>
+
+    <label class="form-label" for="password">Senha</label>
+    <input id="password" type="password" class="form-input" formControlName="password" placeholder="mínimo 6 caracteres" />
+
+    <label class="form-label" for="confirm">Confirmar senha</label>
+    <input id="confirm" type="password" class="form-input" formControlName="confirm" placeholder="repita a senha" />
+    <div class="form-error" *ngIf="form.errors?.mismatch">
+      As senhas não coincidem.
+    </div>
+
+    <button type="submit" class="primary-button">Cadastrar</button>
+    <p class="alt-link">Já possui conta? <a routerLink="/login">Entrar</a></p>
+
+    <p class="form-message" *ngIf="message">{{ message }}</p>
+  </form>
+</section>

@@ -26,9 +26,6 @@
             ],
             "styles": [
               "src/styles.css"
-            ],
-            "scripts": [
-              "https://accounts.google.com/gsi/client"
             ]
           },
           "configurations": {
@@ -53,7 +50,7 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
