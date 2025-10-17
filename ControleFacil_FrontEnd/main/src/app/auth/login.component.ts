@@ -16,6 +16,7 @@ export class LoginComponent {
   private readonly router = inject(Router);
 
   message: string | null = null;
+  loading = false;
 
   form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -28,11 +29,16 @@ export class LoginComponent {
       return;
     }
     const { email, password } = this.form.getRawValue();
-    const res = this.auth.login(email, password);
-    this.message = res.ok ? 'Login realizado com sucesso.' : res.message;
-    if (res.ok) {
-      // Navegar para uma rota protegida futura. Por ora, volta ao login.
-      this.router.navigateByUrl('/login');
-    }
+    this.loading = true;
+    this.auth.login(email, password).subscribe({
+      next: (resp) => {
+        this.auth.setSessionFromLogin(resp);
+        this.message = 'Login realizado com sucesso.';
+        this.router.navigateByUrl('/');
+      },
+      error: (err) => {
+        this.message = typeof err?.error === 'string' ? err.error : 'Falha no login.';
+      }
+    }).add(() => { this.loading = false; });
   }
 }
