@@ -1,87 +1,57 @@
 import { Injectable, computed, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../environment';
 
-export interface UserAccount {
-  id: string;
-  name: string;
+export interface LoginResponse {
+  token: string;
+  tokenType: string;
+  expiresIn: number;
+  userId: number;
+  username: string;
   email: string;
-  passwordHash: string;
-  createdAt: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly usersKey = 'cf_users';
-  private readonly sessionKey = 'cf_session';
+  private readonly sessionKey = 'cf_jwt';
+  private currentToken = signal<string | null>(this.getStoredToken());
+  readonly isAuthenticated = computed(() => !!this.currentToken());
 
-  private currentEmail = signal<string | null>(this.getSessionEmail());
-  readonly isAuthenticated = computed(() => !!this.currentEmail());
+  constructor(private http: HttpClient) {}
 
-  private getSessionEmail(): string | null {
+  private getStoredToken(): string | null {
     try {
-      const raw = localStorage.getItem(this.sessionKey);
-      return raw ? JSON.parse(raw)?.email ?? null : null;
+      return localStorage.getItem(this.sessionKey);
     } catch {
       return null;
     }
   }
 
-  private saveSession(email: string | null): void {
-    if (email) localStorage.setItem(this.sessionKey, JSON.stringify({ email }));
+  private saveToken(token: string | null): void {
+    if (token) localStorage.setItem(this.sessionKey, token);
     else localStorage.removeItem(this.sessionKey);
-    this.currentEmail.set(email);
+    this.currentToken.set(token);
   }
 
-  private loadUsers(): UserAccount[] {
-    try {
-      const raw = localStorage.getItem(this.usersKey);
-      return raw ? (JSON.parse(raw) as UserAccount[]) : [];
-    } catch {
-      return [];
-    }
+  register(name: string, email: string, password: string) {
+    const body = { username: name, email, senha: password };
+    return this.http.post(`${environment.apiBase}/usuarios`, body);
   }
 
-  private saveUsers(users: UserAccount[]): void {
-    localStorage.setItem(this.usersKey, JSON.stringify(users));
+  login(usernameOrEmail: string, password: string) {
+    const body = { usernameOrEmail, senha: password };
+    return this.http.post<LoginResponse>(`${environment.apiBase}/auth/login`, body);
   }
 
-  private hash(input: string): string {
-    let h = 0;
-    for (let i = 0; i < input.length; i++) h = (h << 5) - h + input.charCodeAt(i);
-    return Math.abs(h).toString(16);
-  }
-
-  register(name: string, email: string, password: string): { ok: true } | { ok: false; message: string } {
-    const users = this.loadUsers();
-    if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-      return { ok: false, message: 'E-mail já cadastrado.' };
-    }
-    const user: UserAccount = {
-      id: crypto.randomUUID(),
-      name,
-      email,
-      passwordHash: this.hash(password),
-      createdAt: new Date().toISOString()
-    };
-    users.push(user);
-    this.saveUsers(users);
-    this.saveSession(email);
-    return { ok: true };
-  }
-
-  login(email: string, password: string): { ok: true } | { ok: false; message: string } {
-    const users = this.loadUsers();
-    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (!user) return { ok: false, message: 'Usuário não encontrado.' };
-    if (user.passwordHash !== this.hash(password)) return { ok: false, message: 'Senha inválida.' };
-    this.saveSession(email);
-    return { ok: true };
+  setSessionFromLogin(resp: LoginResponse) {
+    this.saveToken(resp.token);
   }
 
   logout(): void {
-    this.saveSession(null);
+    this.saveToken(null);
   }
 
-  getCurrentEmail(): string | null {
-    return this.currentEmail();
+  getToken(): string | null {
+    return this.currentToken();
   }
 }
