@@ -1,3 +1,6 @@
 .app-shell { display: flex; flex-direction: column; min-height: 100vh; }
-.app-header { padding: 16px; background: #1976d2; color: #fff; }
+.app-header { padding: 16px; background: #1976d2; color: #fff; display: flex; align-items: center; justify-content: space-between; }
+.app-nav { display: flex; gap: 12px; }
+.app-nav a { color: #fff; text-decoration: none; }
+.app-nav a:hover { text-decoration: underline; }
 .app-content { flex: 1; padding: 16px; }
