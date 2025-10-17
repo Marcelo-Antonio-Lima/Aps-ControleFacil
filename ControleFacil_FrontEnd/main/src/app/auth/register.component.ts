@@ -22,6 +22,7 @@ export class RegisterComponent {
   private readonly router = inject(Router);
 
   message: string | null = null;
+  loading = false;
 
   form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -36,10 +37,15 @@ export class RegisterComponent {
       return;
     }
     const { name, email, password } = this.form.getRawValue();
-    const res = this.auth.register(name, email, password);
-    this.message = res.ok ? 'Cadastro realizado com sucesso.' : res.message;
-    if (res.ok) {
-      this.router.navigateByUrl('/login');
-    }
+    this.loading = true;
+    this.auth.register(name, email, password).subscribe({
+      next: () => {
+        this.message = 'Cadastro realizado com sucesso.';
+        this.router.navigateByUrl('/login');
+      },
+      error: (err) => {
+        this.message = typeof err?.error === 'string' ? err.error : 'Falha no cadastro.';
+      }
+    }).add(() => { this.loading = false; });
   }
 }
