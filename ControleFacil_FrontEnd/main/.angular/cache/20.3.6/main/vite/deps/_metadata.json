@@ -1,46 +1,58 @@
 {
-  "hash": "ec340900",
-  "configHash": "4143ea06",
+  "hash": "0646f437",
+  "configHash": "54035dc9",
   "lockfileHash": "b9550d42",
-  "browserHash": "271fcdf6",
+  "browserHash": "d48c57f2",
   "optimized": {
     "@angular/core": {
       "src": "../../../../../../node_modules/@angular/core/fesm2022/core.mjs",
       "file": "@angular_core.js",
-      "fileHash": "13c53f8d",
+      "fileHash": "2ee0b9e5",
       "needsInterop": false
     },
     "@angular/platform-browser": {
       "src": "../../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
       "file": "@angular_platform-browser.js",
-      "fileHash": "e6d3de62",
+      "fileHash": "aa65d51e",
       "needsInterop": false
     },
     "@angular/router": {
       "src": "../../../../../../node_modules/@angular/router/fesm2022/router.mjs",
       "file": "@angular_router.js",
-      "fileHash": "91183517",
+      "fileHash": "9dcf66ea",
       "needsInterop": false
     },
     "zone.js": {
       "src": "../../../../../../node_modules/zone.js/fesm2015/zone.js",
       "file": "zone__js.js",
-      "fileHash": "c807251a",
+      "fileHash": "cca7177c",
       "needsInterop": true
     },
     "@angular/forms": {
       "src": "../../../../../../node_modules/@angular/forms/fesm2022/forms.mjs",
       "file": "@angular_forms.js",
-      "fileHash": "2bbbcdbc",
+      "fileHash": "f35f52e4",
+      "needsInterop": false
+    },
+    "@angular/common/http": {
+      "src": "../../../../../../node_modules/@angular/common/fesm2022/http.mjs",
+      "file": "@angular_common_http.js",
+      "fileHash": "ead9e251",
       "needsInterop": false
     }
   },
   "chunks": {
-    "chunk-VQKDHLL6": {
-      "file": "chunk-VQKDHLL6.js"
+    "chunk-QJ4HZCG7": {
+      "file": "chunk-QJ4HZCG7.js"
     },
-    "chunk-4HSLGWHH": {
-      "file": "chunk-4HSLGWHH.js"
+    "chunk-2LGJ44LQ": {
+      "file": "chunk-2LGJ44LQ.js"
+    },
+    "chunk-YH2TW753": {
+      "file": "chunk-YH2TW753.js"
+    },
+    "chunk-ZMLREZMJ": {
+      "file": "chunk-ZMLREZMJ.js"
     },
     "chunk-DQIUKFFJ": {
       "file": "chunk-DQIUKFFJ.js"
