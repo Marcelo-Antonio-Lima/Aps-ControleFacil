@@ -34,7 +34,7 @@ export class LoginComponent {
       next: (resp) => {
         this.auth.setSessionFromLogin(resp);
         this.message = 'Login realizado com sucesso.';
-        this.router.navigateByUrl('/');
+        this.router.navigateByUrl('/dashboard');
       },
       error: (err) => {
         this.message = typeof err?.error === 'string' ? err.error : 'Falha no login.';
