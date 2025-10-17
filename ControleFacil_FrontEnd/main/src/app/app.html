@@ -2,9 +2,10 @@
   <header class="app-header">
     <h1>{{ title() }}</h1>
     <nav class="app-nav">
-      <a routerLink="/login">Entrar</a>
-      <a routerLink="/cadastro">Cadastro</a>
-      <a routerLink="/dashboard">Dashboard</a>
+      <a routerLink="/login" *ngIf="!loggedIn()">Entrar</a>
+      <a routerLink="/cadastro" *ngIf="!loggedIn()">Cadastro</a>
+      <a routerLink="/dashboard" *ngIf="loggedIn()">Dashboard</a>
+      <a href="#" (click)="logout()" *ngIf="loggedIn()">Sair</a>
     </nav>
   </header>
   <main class="app-content">
